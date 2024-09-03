@@ -13,9 +13,9 @@ app.use(cors());
 app.use(express.static("dist"));
 
 //Use Routes
-// app.get("/", (req, res) => {
-//   res.sendFile(path.join(__dirname, "dist", "index.html"));
-// });
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 app.get("/inventario", consultaInventario);
 app.post("/entradas", entradaInventario);
 app.post("/salidas", salidaInventario);

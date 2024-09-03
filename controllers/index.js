@@ -58,12 +58,40 @@ const salidaInventario = async (req, res) => {
   const destino = req.body.destino;
   const facturaVenta = req.body.facturaVenta;
   const seriales = req.body.series;
+
   try {
+    const records = await Inventario.findAll({
+      where: {
+        serialNumber: {
+          [Op.in]: seriales,
+        },
+      },
+    });
+
+    // Extract serial numbers from fetched records
+    const fetchedSerialNumbers = new Set(records.map((record) => record.serialNumber));
+
+    // Find serial numbers that were not found in the database
+    const notFoundSerialNumbers = seriales.filter((serialNumber) => !fetchedSerialNumbers.has(serialNumber));
+
+    if (notFoundSerialNumbers.length > 0) {
+      return res.status(404).send({
+        error: "No se encuentran los siguientes seriales",
+        notFoundSerialNumbers,
+      });
+    }
+
     const salida = await Inventario.update(
       { destino, facturaVenta, fechaSalida },
-      { where: { serialNumber: [...seriales] } }
+      {
+        where: {
+          serialNumber: {
+            [Op.in]: seriales,
+          },
+        },
+      }
     );
-    res.send("Salida creada");
+    res.send({ ok: true, msg: "Salida Registrada" });
   } catch (error) {
     console.log(error);
     res.status(400).send(error);
