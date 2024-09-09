@@ -46,6 +46,23 @@ const entradaInventario = async (req, res) => {
     return { ...item, fechaEntrada };
   });
   try {
+    const serialNumbers = entrada.map((item) => item.serialNumber);
+    const existingItems = await Inventario.findAll({
+      where: {
+        serialNumber: serialNumbers,
+      },
+      attributes: ["serialNumber"],
+    });
+
+    // Create a Set of existing serial numbers for quick lookup
+    const existingSerialNumbers = new Set(existingItems.map((item) => item.serialNumber));
+    const duplicates = entrada.filter((item) => existingSerialNumbers.has(item.serialNumber));
+    if (duplicates.length > 0) {
+      return res.status(409).json({
+        message: "Los siguientes seriales ya existen en la base de datos",
+        duplicates: duplicates.map((item) => item.serialNumber),
+      });
+    }
     const items = await Inventario.bulkCreate(entrada);
     res.send("Entrada creada");
   } catch (error) {
