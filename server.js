@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const controller = require("./controllers");
 
-const { entradaInventario, salidaInventario, consultaInventario } = controller;
+const { entradaInventario, salidaInventario, consultaInventario, reporteInventario } = controller;
 
 const app = express();
 
@@ -17,6 +17,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 app.get("/inventario", consultaInventario);
+app.get("/reporte", reporteInventario);
 app.post("/entradas", entradaInventario);
 app.post("/salidas", salidaInventario);
 

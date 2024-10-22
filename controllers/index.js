@@ -115,4 +115,16 @@ const salidaInventario = async (req, res) => {
   }
 };
 
-module.exports = { entradaInventario, salidaInventario, consultaInventario };
+const reporteInventario = async (req, res) => {
+  try {
+    const reporte = await Inventario.count({
+      group: [req.query.q],
+    });
+    res.json(reporte);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
+};
+
+module.exports = { entradaInventario, salidaInventario, consultaInventario, reporteInventario };
