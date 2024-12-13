@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Inventario.belongsTo(models.partNumbers, { foreignKey: "partNumber", as: "partNumberID" });
     }
   }
   Inventario.init(
@@ -23,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       sector: DataTypes.STRING,
       facturaVenta: DataTypes.STRING,
       destino: DataTypes.STRING,
+      isBackup: DataTypes.BOOLEAN,
+      isDemo: DataTypes.BOOLEAN,
       fechaEntrada: DataTypes.DATE,
       fechaSalida: DataTypes.DATE,
     },

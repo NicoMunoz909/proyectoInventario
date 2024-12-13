@@ -4,6 +4,8 @@ const { Op } = require("sequelize");
 const consultaInventario = async (req, res) => {
   const filters = req.query;
   const soloStock = req.query.soloStock === "true";
+  const soloBackups = req.query.isBackup ==="true";
+  const soloDemos = req.query.isDemo ==="true";
 
   try {
     const queryOptions = {
@@ -24,6 +26,12 @@ const consultaInventario = async (req, res) => {
 
     if (soloStock) {
       queryOptions.where.fechaSalida = { [Op.is]: null };
+    }
+    if (soloBackups) {
+      queryOptions.where.isBackup = { [Op.is]: true};
+    }
+    if (soloDemos) {
+      queryOptions.where.isDemo = { [Op.is]: true};
     }
 
     // Fetch all records from the table

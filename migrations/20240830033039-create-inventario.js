@@ -48,6 +48,12 @@ module.exports = {
       fechaSalida: {
         type: Sequelize.DATE
       },
+      isBackup: {
+        type: Sequelize.BOOLEAN
+      },
+      isDemo: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
