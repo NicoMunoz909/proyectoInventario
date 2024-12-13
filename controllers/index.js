@@ -14,7 +14,7 @@ const consultaInventario = async (req, res) => {
 
     for (const [key, value] of Object.entries(filters)) {
       if (value && key !== "soloStock") {
-        if (key === "serialNumber") {
+        if (key !== "isBackup" && key !== "isDemo") {
           // Apply partial matching (wildcard search) for serialNumber
           queryOptions.where[key] = { [Op.like]: `%${value}%` };
         } else {
