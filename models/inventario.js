@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       ordenDeCompra: DataTypes.STRING,
       partNumber: DataTypes.STRING,
       proveedor: DataTypes.STRING,
+      descripcion: DataTypes.STRING,
       serialNumber: DataTypes.STRING,
       facturaCompra: DataTypes.STRING,
       cfdi: DataTypes.STRING,

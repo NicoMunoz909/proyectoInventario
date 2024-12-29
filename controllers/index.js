@@ -82,10 +82,12 @@ const salidaInventario = async (req, res) => {
   const fechaSalida = new Date().toISOString();
   const destino = req.body.destino;
   const facturaVenta = req.body.facturaVenta;
-  const seriales = req.body.series;
+  const seriales = req.body.series || [];
+  const partNumbers = req.body.partNumbers || [];
 
   try {
-    const records = await Inventario.findAll({
+    // Fetch records by serial numbers
+    const serialRecords = await Inventario.findAll({
       where: {
         serialNumber: {
           [Op.in]: seriales,
@@ -93,8 +95,34 @@ const salidaInventario = async (req, res) => {
       },
     });
 
+    // Fetch records by part numbers
+    const partNumberRecords = []
+    const retrievedIds = []
+
+    for (let index = 0; index < partNumbers.length; index++) {
+      const partNumber = partNumbers[index];
+
+      const fetchedPartNumber = await Inventario.findOne({
+        where: {
+          [Op.and]: [
+            { partNumber },
+            { id: { [Op.notIn]: retrievedIds } },
+          ],
+        },
+      })
+      if (fetchedPartNumber) {
+        retrievedIds.push(fetchedPartNumber.get("id"));
+        partNumberRecords.push(fetchedPartNumber);
+      } else {
+          return res.status(404).send({
+            error: "No hay suficiente stock o no se encuentra alguno de los part number",
+            information: partNumber,
+          });
+      }
+    }
+    
     // Extract serial numbers from fetched records
-    const fetchedSerialNumbers = new Set(records.map((record) => record.serialNumber));
+    const fetchedSerialNumbers = new Set(serialRecords.map((record) => record.serialNumber));
 
     // Find serial numbers that were not found in the database
     const notFoundSerialNumbers = seriales.filter((serialNumber) => !fetchedSerialNumbers.has(serialNumber));
@@ -102,21 +130,28 @@ const salidaInventario = async (req, res) => {
     if (notFoundSerialNumbers.length > 0) {
       return res.status(404).send({
         error: "No se encuentran los siguientes seriales",
-        notFoundSerialNumbers,
+        information: notFoundSerialNumbers,
       });
     }
+
+    // Combine serial and part number records for updating
+    const allRecords = [...serialRecords, ...partNumberRecords];
+
+    // Extract IDs to update
+    const allIdsToUpdate = allRecords.map((record) => record.id);
+
 
     const salida = await Inventario.update(
       { destino, facturaVenta, fechaSalida },
       {
         where: {
-          serialNumber: {
-            [Op.in]: seriales,
+          id: {
+            [Op.in]: allIdsToUpdate,
           },
         },
       }
     );
-    res.send({ ok: true, msg: "Salida Registrada" });
+    res.send({ ok: true, msg: "Salida Registrada", ids: allIdsToUpdate });
   } catch (error) {
     console.log(error);
     res.status(400).send(error);
