@@ -63,8 +63,14 @@ const entradaInventario = async (req, res) => {
     });
 
     // Create a Set of existing serial numbers for quick lookup
-    const existingSerialNumbers = new Set(existingItems.map((item) => item.serialNumber));
-    const duplicates = entrada.filter((item) => existingSerialNumbers.has(item.serialNumber));
+    const existingSerialNumbers = new Set(
+      existingItems
+        .map((item) => item.serialNumber)
+        .filter((serialNumber) => serialNumber !== "S/N") // Exclude "S/N"
+    );
+    const duplicates = entrada.filter(
+      (item) => item.serialNumber !== "S/N" && existingSerialNumbers.has(item.serialNumber)
+    );
     if (duplicates.length > 0) {
       return res.status(409).json({
         message: "Los siguientes seriales ya existen en la base de datos",
