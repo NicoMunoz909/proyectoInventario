@@ -1,10 +1,9 @@
 require("dotenv").config();
-const path = require("path");
 const express = require("express");
 const cors = require("cors");
-const controller = require("./controllers");
-
-const { entradaInventario, salidaInventario, consultaInventario, reporteInventario } = controller;
+const { checkExistingSerials, validateIds, validateNotAlreadySold, validateFields, validateId } = require("./validations/inventario");
+const { consulta, entrada, salida, actualizar, eliminar } = require("./controllers/inventario");
+const { reporte } = require("./controllers/reportes");
 
 const app = express();
 
@@ -13,13 +12,12 @@ app.use(cors());
 app.use(express.static("dist"));
 
 //Use Routes
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
-app.get("/inventario", consultaInventario);
-app.get("/reporte", reporteInventario);
-app.post("/entradas", entradaInventario);
-app.post("/salidas", salidaInventario);
+app.get("/inventario", validateFields, consulta);
+app.post("/inventario", checkExistingSerials, entrada);
+app.put("/inventario",validateIds, validateNotAlreadySold, salida);
+app.patch("/inventario/:id", validateId, validateFields, actualizar)
+app.delete("/inventario/:id", validateId, eliminar)
+app.get("/reporte", reporte);
 
 const port = process.env.PORT || 4000;
 

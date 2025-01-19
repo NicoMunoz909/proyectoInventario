@@ -12,15 +12,40 @@ module.exports = (sequelize, DataTypes) => {
   }
   Inventario.init(
     {
-      ordenDeCompra: DataTypes.STRING,
-      partNumber: DataTypes.STRING,
-      proveedor: DataTypes.STRING,
-      descripcion: DataTypes.STRING,
-      serialNumber: DataTypes.STRING,
-      facturaCompra: DataTypes.STRING,
+      ordenDeCompra: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      partNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      proveedor: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      descripcion: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      serialNumber: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true,
+      },
+      facturaCompra: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       cfdi: DataTypes.STRING,
-      almacen: DataTypes.STRING,
-      sector: DataTypes.STRING,
+      almacen: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      sector: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       facturaVenta: DataTypes.STRING,
       destino: DataTypes.STRING,
       isBackup: DataTypes.BOOLEAN,
