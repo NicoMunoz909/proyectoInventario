@@ -1,10 +1,10 @@
 const { Inventario } = require("../models");
 const { Op } = require("sequelize");
-const { ERROR_STATUS } = require("../config/constants.js")
+const { RESPONSE_STATUS } = require("../config/constants.js")
 
 const checkExistingSerials = async (req, res, next) => {
-    const serialNumbers = req.body.map(item => item.serialNumber);
   
+  const serialNumbers = req.body.map(item => item.serialNumber);
     try {
       const existingItems = await Inventario.findAll({
         where: {
@@ -20,7 +20,7 @@ const checkExistingSerials = async (req, res, next) => {
   
       if (existingItems.length > 0) {
         return res.status(409).json({
-          status: ERROR_STATUS.EXISTING_SERIALS,
+          status: RESPONSE_STATUS.EXISTING_SERIALS,
           message: "Los siguientes seriales ya existen en la base de datos",
           data: existingItems.map((item) => item.serialNumber), // Extract serial numbers
         });
@@ -29,7 +29,7 @@ const checkExistingSerials = async (req, res, next) => {
       }
     } catch (error) {
       console.error("Ocurrio un error al chequear los seriales:", error);
-      res.status(500).json({ status: ERROR_STATUS.SERVER_ERROR, message: "Internal server error" });
+      res.status(500).json({ status: RESPONSE_STATUS.SERVER_ERROR, message: "Internal server error" });
     }
 };
   
@@ -56,7 +56,7 @@ const checkPartNumbersStock = async (req, res, next) => {
       partNumberRecords.push(fetchedPartNumber);
     } else {
         return res.status(404).send({
-          status: ERROR_STATUS.NO_PN_STOCK,
+          status: RESPONSE_STATUS.NO_PN_STOCK,
           message: "No hay suficiente stock o no se encuentra alguno de los part number",
           data: partNumber,
         });
@@ -87,7 +87,7 @@ const checkSerialNumberExistence = async (req, res, next) => {
 
   if (notFoundSerialNumbers.length > 0) {
     return res.status(404).send({
-      status: ERROR_STATUS.SERIAL_NOT_FOUND,
+      status: RESPONSE_STATUS.SERIAL_NOT_FOUND,
       message: "No se encuentran los siguientes seriales",
       data: notFoundSerialNumbers,
     });
@@ -108,7 +108,7 @@ const validateIds = async (req, res, next) => {
 
     if (missingIds.length > 0) {
       return res.status(400).json({
-        status: ERROR_STATUS.ID_NOT_FOUND,
+        status: RESPONSE_STATUS.ID_NOT_FOUND,
         message: "No se encuentran los siguientes Ids",
         data: missingIds,
       });
@@ -129,9 +129,9 @@ const validateNotAlreadySold = async (req, res, next) => {
   
   if (idsAlreadySold.length > 0) {
     return res.status(400).json({
-      status: ERROR_STATUS.ALREADY_SOLD,
+      status: RESPONSE_STATUS.ALREADY_SOLD,
       message: "Los siguientes IDs ya cuentan con fecha de salida",
-      information: idsAlreadySold
+      data: idsAlreadySold
     })
   } else {
     next();
@@ -146,7 +146,7 @@ const validateFields = async (req, res, next) => {
   const wrongFields = requestFields.filter((field) => !itemFields.has(field))
 
   if (wrongFields.length > 0) {
-    return res.status(400).json({status: ERROR_STATUS.FIELD_ERROR, message: "Los siguientes campos no existen", data: wrongFields})
+    return res.status(400).json({status: RESPONSE_STATUS.FIELD_ERROR, message: "Los siguientes campos no existen", data: wrongFields})
   }
 
   next();
@@ -156,7 +156,7 @@ const validateId = async (req, res, next) => {
   const fetch = await Inventario.findByPk(req.params.id)
 
   if (!fetch) {
-    return res.status(400).json({status: ERROR_STATUS.ID_NOT_FOUND, message: "No se encuentra el ID solicitado", data: req.params.id})
+    return res.status(400).json({status: RESPONSE_STATUS.ID_NOT_FOUND, message: "No se encuentra el ID solicitado", data: req.params.id})
   } else {
     next();
   }
