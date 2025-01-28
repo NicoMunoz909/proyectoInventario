@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { checkExistingSerials, validateIds, validateNotAlreadySold, validateFields, validateId } = require("./validations/inventario");
 const { consulta, entrada, salida, actualizar, eliminar } = require("./controllers/inventario");
+const { register, login } = require("./controllers/auth");
 const { reporte } = require("./controllers/reportes");
 
 const app = express();
@@ -18,8 +19,9 @@ app.put("/inventario",validateIds, validateNotAlreadySold, salida);
 app.patch("/inventario/:id", validateId, validateFields, actualizar)
 app.delete("/inventario/:id", validateId, eliminar)
 app.get("/reporte", reporte);
+app.post("/auth/register", register)
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
