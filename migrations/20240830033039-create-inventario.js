@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       serialNumber: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       facturaCompra: {
         type: Sequelize.STRING

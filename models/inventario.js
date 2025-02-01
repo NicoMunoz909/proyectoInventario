@@ -31,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
       serialNumber: {
         type: DataTypes.STRING,
         allowNull: true,
-        unique: true,
       },
       facturaCompra: {
         type: DataTypes.STRING,
