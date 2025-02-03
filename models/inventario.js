@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       serialNumber: {
         type: DataTypes.STRING,
         allowNull: true,
+        unique: true,
       },
       facturaCompra: {
         type: DataTypes.STRING,
@@ -55,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Inventario",
+      timestamps: false
     }
   );
   return Inventario;
