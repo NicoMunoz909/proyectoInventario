@@ -19,10 +19,7 @@ app.put("/inventario", validateToken,validateIds, validateNotAlreadySold, salida
 app.patch("/inventario/:id", validateToken, validateId, validateFields, actualizar)
 app.delete("/inventario/:id", validateToken, validateId, eliminar)
 app.get("/reporte", validateToken, reporte);
-app.get("/auth", validateToken, (req, res) => {
-  return res.send("AUTH")
-})
-app.post("/auth/register", register);
+// app.post("/auth/register", register);
 app.post("/auth/login", login);
 
 const port = process.env.PORT || 4001;

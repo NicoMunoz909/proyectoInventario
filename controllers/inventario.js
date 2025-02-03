@@ -3,11 +3,12 @@ const { Op } = require("sequelize");
 const { RESPONSE_STATUS } = require("../config/constants.js")
 
 const consulta = async (req, res) => {
-  const {attributes, ...filters} = req.query
+  const {attributes, matchTypes ,...filters} = req.query
   const selectedAttributes = attributes ? attributes.split(',') : null
   const soloStock = req.query.soloStock === "true";
   const soloBackups = req.query.isBackup ==="true";
   const soloDemos = req.query.isDemo ==="true";
+  const parsedMatchTypes = matchTypes ? JSON.parse(matchTypes) : {};
  
   try {
     const queryOptions = {
@@ -17,7 +18,10 @@ const consulta = async (req, res) => {
 
     for (const [key, value] of Object.entries(filters)) {
       if (value && key !== "soloStock" && key !== "isBackup" && key !== "isDemo") {
-          queryOptions.where[key] = { [Op.like]: `%${value}%` };
+        queryOptions.where[key] =
+          parsedMatchTypes[key] === "exact"
+            ? { [Op.eq]: value }
+            : { [Op.like]: `%${value}%` };
       }
     }
 
@@ -72,8 +76,12 @@ const entrada = async (req, res) => {
         })),
       });
   } catch (error) {
-    console.error("Error creating entry:", error);
-    res.status(500).json({ status: RESPONSE_STATUS.SERVER_ERROR, message: "Internal server error" });
+    console.error(error);
+    if (error.original.sqlMessage) {
+      return res.status(400).json({ status: RESPONSE_STATUS.DATABASE_ERROR, message: error.original.sqlMessage })
+    } else {
+      return res.status(500).json({ status: RESPONSE_STATUS.SERVER_ERROR, message: "Internal server error" });
+    }
   }
 };
 
