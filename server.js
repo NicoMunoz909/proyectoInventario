@@ -29,9 +29,6 @@ app.get("/reporte", validateToken, reporte);
 // app.post("/auth/register", register);
 app.post("/auth/login", login);
 
-User.sync({alter: true});
-Inventario.sync({alter: true});
-
 const port = process.env.PORT || 4001;
 
 app.listen(port, () => {
