@@ -7,7 +7,6 @@ const { validateToken } = require("./validations/auth")
 const { consulta, entrada, salida, actualizar, eliminar } = require("./controllers/inventario");
 const { register, login } = require("./controllers/auth");
 const { reporte } = require("./controllers/reportes");
-const { User, Inventario } = require("./models");
 
 const app = express();
 
