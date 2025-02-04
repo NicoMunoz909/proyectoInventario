@@ -25,7 +25,7 @@ app.post("/inventario", validateToken, checkExistingSerials, entrada);
 app.put("/inventario", validateToken,validateIds, validateNotAlreadySold, salida);
 app.patch("/inventario/:id", validateToken, validateId, validateFields, actualizar)
 app.delete("/inventario/:id", validateToken, validateId, eliminar)
-app.get("/reporte", validateToken, reporte);
+app.get("/reporte", reporte);
 // app.post("/auth/register", register);
 app.post("/auth/login", login);
 
