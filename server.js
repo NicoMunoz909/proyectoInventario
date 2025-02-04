@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser")
 const { checkExistingSerials, validateIds, validateNotAlreadySold, validateFields, validateId } = require("./validations/inventario");
 const { validateToken } = require("./validations/auth")
 const { consulta, entrada, salida, actualizar, eliminar } = require("./controllers/inventario");
@@ -10,7 +11,13 @@ const { reporte } = require("./controllers/reportes");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow frontend origin
+    credentials: true, // Allow sending cookies
+  })
+);
 
 //Use Routes
 app.get("/inventario", validateToken, validateFields, consulta);
