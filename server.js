@@ -7,6 +7,7 @@ const { validateToken } = require("./validations/auth")
 const { consulta, entrada, salida, actualizar, eliminar } = require("./controllers/inventario");
 const { register, login } = require("./controllers/auth");
 const { reporte } = require("./controllers/reportes");
+const { User, Inventario } = require("./models");
 
 const app = express();
 
@@ -28,6 +29,9 @@ app.delete("/inventario/:id", validateToken, validateId, eliminar)
 app.get("/reporte", validateToken, reporte);
 // app.post("/auth/register", register);
 app.post("/auth/login", login);
+
+User.sync({alter: true});
+Inventario.sync({alter: true});
 
 const port = process.env.PORT || 4001;
 
