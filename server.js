@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://id-automation-inventario.onrender.com"], // Allow frontend origin
+    origin: ["http://localhost:5173", "https://id-automation-inventario.vercel.app"], // Allow frontend origin
     credentials: true, // Allow sending cookies
   })
 );
