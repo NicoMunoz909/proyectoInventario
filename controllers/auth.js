@@ -37,7 +37,7 @@ const login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
       sameSite: "None",
-      path: "/auth", // Limits where the cookie is sent
+      path: "/", // Limits where the cookie is sent
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms (D * H * M * S * MS)
       domain: null
     });
