@@ -30,7 +30,7 @@ const login = async (req, res) => {
     const checkPassword = bcrypt.compareSync(req.body.password, user.password)
     if (!checkPassword) return res.status(400).json({status: RESPONSE_STATUS.NO_MATCH, message: "Credenciales Incorrectas", data:null})
     
-    const accessToken = jwt.sign(user.dataValues, process.env.PRIVATE_KEY, {expiresIn: "10s"});
+    const accessToken = jwt.sign(user.dataValues, process.env.PRIVATE_KEY, {expiresIn: "1d"});
     const refreshToken = jwt.sign(user.dataValues, process.env.REFRESH_KEY, {expiresIn: "7d"});
 
     res.cookie("refreshToken", refreshToken, {
