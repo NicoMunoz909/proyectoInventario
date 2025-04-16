@@ -4,10 +4,10 @@ const { RESPONSE_STATUS } = require("../config/constants.js")
 
 const validateToken = (req, res, next) => {
   try {
-    if (!req.headers.authorization) return res.status(403).json({stats: RESPONSE_STATUS.CREDENTIALS_ERROR, message: "No se encontraron credenciales", data:null})
+    if (!req.headers.authorization) return res.status(403).json({status: RESPONSE_STATUS.CREDENTIALS_ERROR, message: "No se encontraron credenciales", data:null})
   
     const accessToken = req.headers.authorization.split(' ')[1];
-    if (!accessToken) return res.status(403).json({stats: RESPONSE_STATUS.CREDENTIALS_ERROR, message: "No se encontraron credenciales", data:null})
+    if (!accessToken) return res.status(403).json({status: RESPONSE_STATUS.CREDENTIALS_ERROR, message: "No se encontraron credenciales", data:null})
       
     const decoded = jwt.verify(accessToken, process.env.PRIVATE_KEY);
     if (decoded) {
