@@ -59,8 +59,6 @@ app.post("/auth/login", login);
 
 const port = process.env.PORT || 4001;
 
-console.log(process.env).NODE_ENV;
-
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
