@@ -29,7 +29,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://id-automation-inventario.vercel.app",
+      "https://inventario-app-theta.vercel.app",
     ], // Allow frontend origin
     credentials: true, // Allow sending cookies
   })
