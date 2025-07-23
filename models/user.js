@@ -7,23 +7,19 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-    }
+    static associate(models) {}
   }
   User.init(
     {
       username: {
         type: DataTypes.STRING,
         unique: true,
-        validate: {
-            isEmail: true
-        },
         allowNull: false,
       },
       password: {
         type: DataTypes.STRING,
         validate: {
-            is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).{8,}$/i
+          is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d\W]).{8,}$/i,
         },
         allowNull: false,
       },
@@ -34,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       surname: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
     },
     {
       sequelize,
